@@ -23,12 +23,19 @@ function readdirdiy(data)
 {
 	var input = String(data).replace('\n','');
 	if (input == 'exit') {process.exit(1);};
+
 	var stat;
 	if (isNaN(Number(input))) {
 		try
 		{
-			stat = fs.statSync(input);
-			curDir = input;
+			if (input == 'b') //go back to the parent folder
+			{
+				curDir = curDir.substr(0,curDir.lastIndexOf('/'));
+			}
+			else
+				curDir = input;
+			stat = fs.statSync(curDir);
+			
 		}
 		catch(error)
 		{
@@ -88,9 +95,11 @@ function readdirdiy(data)
 						}
 						else
 						{
-							console.log('	Select which file or direcroty you want to see');
+							console.log('\n	Select which file or direcroty you want to see');
 							console.log('	or');
-							console.log('	you can just enter another path to see\n');
+							console.log('	you can just enter another path to see');
+							console.log('	or');
+							console.log('	enter "b" to go to the parent folder.\n');
 						}
 					});
 				}
