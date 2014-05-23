@@ -2,27 +2,22 @@ var fs = require('fs'),
 	stdin = process.stdin,
 	stdout = process.stdout;
 var stats = [];
-var nowFiles =[];
-var curDir='';
+var nowFiles =[]; //files in the current directory
+var curDir=''; // current directory
 
 console.log('	\033[33mWelcome to a console file explorer! \033[39m');
 console.log('	you can quit by enter \'exit\' at any time.')
-//while(1)
-{
-	
-	console.log('	Please enter the path you want to see.');
-	//stdin.pause();
-	stdin.resume();
-	stdin.setEncoding('utf8');
-	stdin.on('data',readdirdiy);
 
-}
+console.log('	Please enter the path you want to see.');
+stdin.resume();
+stdin.setEncoding('utf8');
+stdin.on('data',readdirdiy);
 
-
+//respond to the event of keyboard input
 function readdirdiy(data)
 {
-	var input = String(data).replace('\n','');
-	if (input == 'exit') {process.exit(1);};
+	var input = String(data).replace('\n',''); // delete the "enter"
+	if (input == 'exit') {process.exit(1);};// enter "exit", then exit
 
 	var stat;
 	if (isNaN(Number(input))) {
@@ -39,7 +34,7 @@ function readdirdiy(data)
 		}
 		catch(error)
 		{
-
+			//do nothing
 		}
 		
 	}
@@ -54,18 +49,19 @@ function readdirdiy(data)
 	if (stat != undefined) {
 		if (stat.isDirectory()) {
 			fs.readdir(curDir,function(err,files){
-				
 				nowFiles = files;
 				console.log('');
 				if(err)
 				{
 					if(err.code == 'EACCES')
 					{
-						console.log('Access Denied! Please run again with root.');
+						console.log('Access Denied! Please run again with root account.');
 						process.exit(1);
 					}
 					else
+					{
 						throw err;
+					}
 				}
 
 				if(!files.length)
@@ -73,7 +69,7 @@ function readdirdiy(data)
 					return console.log('	\033[31m No files to show!\033[39m\n');
 				}
 				
-
+				//list the files or directories in the current directory recursively
 				function file(i)
 				{
 					var filename = files[i];
@@ -114,10 +110,7 @@ function readdirdiy(data)
 				stdout.write('	\033[31mEnter your choice: \033[39m');
 			}
 			else
-			{
-				//stdin.pause();
-				//console.log(stats[Number(data)]);
-				
+			{	
 				fs.readFile(curDir,'utf8',function(err,data){
 					console.log('');
 					console.log('\033[90m'+data.replace(/(.*)/g,'	$1')+'\033[39m');
